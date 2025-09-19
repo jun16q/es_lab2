@@ -17,16 +17,21 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "stm32l475e_iot01_accelero.h"
 /* Private defines -----------------------------------------------------------*/
 
 #define TERMINAL_USE
 
 /* Update SSID and PASSWORD with own Access point settings */
-#define SSID     "MySSID"
-#define PASSWORD "MyPasswd"
+#define SSID     "cch0610"
+#define PASSWORD "86603863"
 
-uint8_t RemoteIP[] = {192,168,3,110};
+/* mobile phone */
+//#define SSID     "jun"
+//#define PASSWORD "00000000"
+
+uint8_t RemoteIP[] = {192,168,0,140};
+//uint8_t RemoteIP[] = {};
 #define RemotePORT	8002
 
 #define WIFI_WRITE_TIMEOUT 10000
@@ -82,6 +87,7 @@ int main(void)
   int16_t Trials = CONNECTION_TRIAL_MAX;
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+
   HAL_Init();
 
   /* Configure the system clock */
@@ -92,7 +98,7 @@ int main(void)
 #if defined (TERMINAL_USE)
   /* Initialize all configured peripherals */
   hDiscoUart.Instance = DISCOVERY_COM1;
-  hDiscoUart.Init.BaudRate = 115200;
+  hDiscoUart.Init.BaudRate = 9600;
   hDiscoUart.Init.WordLength = UART_WORDLENGTH_8B;
   hDiscoUart.Init.StopBits = UART_STOPBITS_1;
   hDiscoUart.Init.Parity = UART_PARITY_NONE;
@@ -105,23 +111,23 @@ int main(void)
   BSP_COM_Init(COM1, &hDiscoUart);
 #endif /* TERMINAL_USE */
 
-  TERMOUT("****** WIFI Module in TCP Client mode demonstration ****** \n\n");
-  TERMOUT("TCP Client Instructions :\n");
-  TERMOUT("1- Make sure your Phone is connected to the same network that\n");
-  TERMOUT("   you configured using the Configuration Access Point.\n");
-  TERMOUT("2- Create a server by using the android application TCP Server\n");
-  TERMOUT("   with port(8002).\n");
-  TERMOUT("3- Get the Network Name or IP Address of your Android from the step 2.\n\n");
+  TERMOUT("****** WIFI Module in TCP Client mode demonstration ****** \r\n\n");
+  TERMOUT("TCP Client Instructions :\r\n");
+  TERMOUT("1- Make sure your Phone is connected to the same network that\r\n");
+  TERMOUT("   you configured using the Configuration Access Point.\r\n");
+  TERMOUT("2- Create a server by using the android application TCP Server\r\n");
+  TERMOUT("   with port(8002).\r\n");
+  TERMOUT("3- Get the Network Name or IP Address of your Android from the step 2.\r\n\n");
 
 
 
   /*Initialize  WIFI module */
   if(WIFI_Init() ==  WIFI_STATUS_OK)
   {
-    TERMOUT("> WIFI Module Initialized.\n");
+    TERMOUT("> WIFI Module Initialized.\r\n");
     if(WIFI_GetMAC_Address(MAC_Addr, sizeof(MAC_Addr)) == WIFI_STATUS_OK)
     {
-      TERMOUT("> es-wifi module MAC Address : %X:%X:%X:%X:%X:%X\n",
+      TERMOUT("> es-wifi module MAC Address : %X:%X:%X:%X:%X:%X\r\n",
                MAC_Addr[0],
                MAC_Addr[1],
                MAC_Addr[2],
@@ -131,22 +137,22 @@ int main(void)
     }
     else
     {
-      TERMOUT("> ERROR : CANNOT get MAC address\n");
+      TERMOUT("> ERROR : CANNOT get MAC address\r\n");
       BSP_LED_On(LED2);
     }
 
     if( WIFI_Connect(SSID, PASSWORD, WIFI_ECN_WPA2_PSK) == WIFI_STATUS_OK)
     {
-      TERMOUT("> es-wifi module connected \n");
+      TERMOUT("> es-wifi module connected \r\n");
       if(WIFI_GetIP_Address(IP_Addr, sizeof(IP_Addr)) == WIFI_STATUS_OK)
       {
-        TERMOUT("> es-wifi module got IP Address : %d.%d.%d.%d\n",
+        TERMOUT("> es-wifi module got IP Address : %d.%d.%d.%d\r\n",
                IP_Addr[0],
                IP_Addr[1],
                IP_Addr[2],
                IP_Addr[3]);
 
-        TERMOUT("> Trying to connect to Server: %d.%d.%d.%d:%d ...\n",
+        TERMOUT("> Trying to connect to Server: %d.%d.%d.%d:%d ...\r\n",
                RemoteIP[0],
                RemoteIP[1],
                RemoteIP[2],
@@ -157,34 +163,37 @@ int main(void)
         {
           if( WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, "TCP_CLIENT", RemoteIP, RemotePORT, 0) == WIFI_STATUS_OK)
           {
-            TERMOUT("> TCP Connection opened successfully.\n");
+            TERMOUT("> TCP Connection opened successfully.\r\n");
             Socket = 0;
             break;
           }
         }
         if(Socket == -1)
         {
-          TERMOUT("> ERROR : Cannot open Connection\n");
+          TERMOUT("> ERROR : Cannot open Connection\r\n");
           BSP_LED_On(LED2);
         }
       }
       else
       {
-        TERMOUT("> ERROR : es-wifi module CANNOT get IP address\n");
+        TERMOUT("> ERROR : es-wifi module CANNOT get IP address\r\n");
         BSP_LED_On(LED2);
       }
     }
     else
     {
-      TERMOUT("> ERROR : es-wifi module NOT connected\n");
+      TERMOUT("> ERROR : es-wifi module NOT connected\r\n");
       BSP_LED_On(LED2);
     }
   }
   else
   {
-    TERMOUT("> ERROR : WIFI Module cannot be initialized.\n");
+    TERMOUT("> ERROR : WIFI Module cannot be initialized.\r\n");
     BSP_LED_On(LED2);
   }
+
+  BSP_ACCELERO_Init();
+  int16_t pDataXYZ[3] = {0};
 
   while(1)
   {
@@ -196,18 +205,23 @@ int main(void)
         if(Datalen > 0)
         {
           RxData[Datalen]=0;
-          TERMOUT("Received: %s\n",RxData);
+          TERMOUT("Received: %s\r\n",RxData);
+
+          /* Accelerometer reading*/
+          BSP_ACCELERO_AccGetXYZ(pDataXYZ);
+          printf("Accelerometer reading: X=%d, Y=%d, Z=%d\r\n", pDataXYZ[0], pDataXYZ[1], pDataXYZ[2]);
+
           ret = WIFI_SendData(Socket, TxData, sizeof(TxData), &Datalen, WIFI_WRITE_TIMEOUT);
           if (ret != WIFI_STATUS_OK)
           {
-            TERMOUT("> ERROR : Failed to Send Data, connection closed\n");
+            TERMOUT("> ERROR : Failed to Send Data, connection closed\r\n");
             break;
           }
         }
       }
       else
       {
-        TERMOUT("> ERROR : Failed to Receive Data, connection closed\n");
+        TERMOUT("> ERROR : Failed to Receive Data, connection closed\r\n");
         break;
       }
     }

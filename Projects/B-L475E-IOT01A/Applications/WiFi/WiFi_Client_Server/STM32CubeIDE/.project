@@ -31,6 +31,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Application/Inc</name>
+			<type>2</type>
+			<location>D:/EmbeddedSystem/STM32CubeL4/Projects/B-L475E-IOT01A/Applications/WiFi/WiFi_Client_Server/Inc</location>
+		</link>
+		<link>
 			<name>Doc/readme.txt</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/readme.txt</locationURI>
@@ -149,6 +154,26 @@
 			<name>Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.c</name>
 			<type>1</type>
 			<locationURI>PARENT-6-PROJECT_LOC/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.c</name>
+			<type>1</type>
+			<location>D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.c</location>
+		</link>
+		<link>
+			<name>Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.h</name>
+			<type>1</type>
+			<location>D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.h</location>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/Common</name>
+			<type>2</type>
+			<location>D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/Components/Common</location>
+		</link>
+		<link>
+			<name>Drivers/BSP/Components/lsm6dsl</name>
+			<type>2</type>
+			<location>D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/Components/lsm6dsl</location>
 		</link>
 	</linkedResources>
 </projectDescription>
