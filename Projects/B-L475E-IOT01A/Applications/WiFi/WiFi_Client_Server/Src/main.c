@@ -23,16 +23,18 @@
 #define TERMINAL_USE
 
 /* Update SSID and PASSWORD with own Access point settings */
-#define SSID     "cch0610"
-#define PASSWORD "86603863"
+//#define SSID     "cch0610"
+//#define PASSWORD "86603863"
 
 /* mobile phone */
-//#define SSID     "jun"
-//#define PASSWORD "00000000"
+#define SSID     "jun"
+#define PASSWORD "00000000"
 
-uint8_t RemoteIP[] = {192,168,0,140};
-//uint8_t RemoteIP[] = {};
-#define RemotePORT	8002
+//uint8_t RemoteIP[] = {192,168,0,140};
+//uint8_t RemoteIP[] = {10,98,241,95};
+//uint8_t RemoteIP[] = {10,156,230,89};
+uint8_t RemoteIP[] = {10,114,202,16};
+#define RemotePORT	5000
 
 #define WIFI_WRITE_TIMEOUT 10000
 #define WIFI_READ_TIMEOUT  10000
@@ -80,7 +82,7 @@ int main(void)
 {
   uint8_t  MAC_Addr[6] = {0};
   uint8_t  IP_Addr[4] = {0};
-  uint8_t TxData[] = "STM32 : Hello!\n";
+  static uint8_t TxData[100];
   int32_t Socket = -1;
   uint16_t Datalen;
   int32_t ret;
@@ -199,31 +201,23 @@ int main(void)
   {
     if(Socket != -1)
     {
-      ret = WIFI_ReceiveData(Socket, RxData, sizeof(RxData)-1, &Datalen, WIFI_READ_TIMEOUT);
-      if(ret == WIFI_STATUS_OK)
-      {
-        if(Datalen > 0)
-        {
-          RxData[Datalen]=0;
-          TERMOUT("Received: %s\r\n",RxData);
+    	/* Accelerometer reading */
+		BSP_ACCELERO_AccGetXYZ(pDataXYZ);
+		printf("Accelerometer reading: X=%d, Y=%d, Z=%d\r\n",
+				pDataXYZ[0], pDataXYZ[1], pDataXYZ[2]);
 
-          /* Accelerometer reading*/
-          BSP_ACCELERO_AccGetXYZ(pDataXYZ);
-          printf("Accelerometer reading: X=%d, Y=%d, Z=%d\r\n", pDataXYZ[0], pDataXYZ[1], pDataXYZ[2]);
+		snprintf((char*)TxData, sizeof(TxData),
+				 "%d, %d, %d\r\n",
+				 pDataXYZ[0], pDataXYZ[1], pDataXYZ[2]);
 
-          ret = WIFI_SendData(Socket, TxData, sizeof(TxData), &Datalen, WIFI_WRITE_TIMEOUT);
-          if (ret != WIFI_STATUS_OK)
-          {
-            TERMOUT("> ERROR : Failed to Send Data, connection closed\r\n");
-            break;
-          }
-        }
-      }
-      else
-      {
-        TERMOUT("> ERROR : Failed to Receive Data, connection closed\r\n");
-        break;
-      }
+		ret = WIFI_SendData(Socket, TxData, strlen((char*)TxData), &Datalen, WIFI_WRITE_TIMEOUT);
+		if (ret != WIFI_STATUS_OK)
+		{
+			TERMOUT("> ERROR : Failed to Send Data, connection closed\r\n");
+			break;
+		}
+
+		HAL_Delay(50);
     }
   }
 }
