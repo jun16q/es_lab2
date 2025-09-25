@@ -2,3 +2,5 @@ D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_acceler
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.c:89:6:BSP_ACCELERO_DeInit	3
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.c:106:6:BSP_ACCELERO_LowPower	3
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.c:124:6:BSP_ACCELERO_AccGetXYZ	3
+D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.c:165:9:BSP_ACCELERO_Enable_Motion_Detection_IT	1
+D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.c:175:9:BSP_ACCELERO_Disable_Motion_Detection_IT	10
