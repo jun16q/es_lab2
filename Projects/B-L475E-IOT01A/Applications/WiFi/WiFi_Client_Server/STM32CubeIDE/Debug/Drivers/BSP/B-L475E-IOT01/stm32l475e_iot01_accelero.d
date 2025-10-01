@@ -35,7 +35,8 @@ Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.o: \
  ../../../../../../../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_usb.h \
  D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/lsm6dsl.h \
  D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/accelero.h \
- D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/gyro.h
+ D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/gyro.h \
+ ../../../../../../../Drivers/BSP/Components/lsm6dsl/lsm6dsl.h
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01_accelero.h:
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
 ../../../../../../../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
@@ -72,3 +73,4 @@ D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/stm32l475e_iot01.h:
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/lsm6dsl.h:
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/accelero.h:
 D:/EmbeddedSystem/STM32CubeL4/Drivers/BSP/B-L475E-IOT01/../Components/lsm6dsl/../Common/gyro.h:
+../../../../../../../Drivers/BSP/Components/lsm6dsl/lsm6dsl.h:

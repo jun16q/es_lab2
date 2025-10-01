@@ -30,7 +30,7 @@
 //#define SSID     "jun"
 //#define PASSWORD "00000000"
 
-uint8_t RemoteIP[] = {192,168,0,140};
+uint8_t RemoteIP[] = {192,168,0,192};
 #define RemotePORT	5000
 
 #define WIFI_WRITE_TIMEOUT 10000
