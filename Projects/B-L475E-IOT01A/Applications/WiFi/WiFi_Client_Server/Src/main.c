@@ -250,7 +250,7 @@ int main(void)
       /* Check if motion was detected */
       if(motion_detected)
       {
-        motion_detected = 0; /* Clear the flag */
+        motion_detected = 0;
         motion_count++;
         last_motion_time = HAL_GetTick();
 
@@ -261,11 +261,6 @@ int main(void)
 
         TERMOUT(">> Significant Motion Detected! Count: %lu\r\n", motion_count);
 
-        /* Blink LED to indicate motion detection */
-        BSP_LED_On(LED2);
-        HAL_Delay(100);
-        BSP_LED_Off(LED2);
-
         ret = WIFI_SendData(Socket, TxData, strlen((char*)TxData), &Datalen, WIFI_WRITE_TIMEOUT);
         if (ret != WIFI_STATUS_OK)
         {
@@ -274,31 +269,7 @@ int main(void)
         }
       }
 
-      /* Regular accelerometer reading and transmission */
-      BSP_ACCELERO_AccGetXYZ(pDataXYZ);
-
-      /* Send regular data with motion status */
-      snprintf((char*)TxData, sizeof(TxData),
-               "ACCEL,%d,%d,%d,MotionCount=%lu\r\n",
-               pDataXYZ[0], pDataXYZ[1], pDataXYZ[2], motion_count);
-
-      ret = WIFI_SendData(Socket, TxData, strlen((char*)TxData), &Datalen, WIFI_WRITE_TIMEOUT);
-      if (ret != WIFI_STATUS_OK)
-      {
-        TERMOUT("> ERROR : Failed to Send Data, connection closed\r\n");
-        break;
-      }
-
-      /* Print to terminal every 20 iterations (reduce spam) */
-      static uint8_t print_counter = 0;
-      if(++print_counter >= 20)
-      {
-        print_counter = 0;
-        printf("Accelerometer: X=%d, Y=%d, Z=%d, Motion Count=%lu\r\n",
-               pDataXYZ[0], pDataXYZ[1], pDataXYZ[2], motion_count);
-      }
-
-      HAL_Delay(100); /* Increased delay for better readability */
+      HAL_Delay(100);
     }
   }
 }
