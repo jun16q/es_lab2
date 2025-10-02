@@ -30,7 +30,7 @@
 //#define SSID     "jun"
 //#define PASSWORD "00000000"
 
-uint8_t RemoteIP[] = {192,168,0,192};
+uint8_t RemoteIP[] = {192,168,0,140};
 #define RemotePORT	5000
 
 #define WIFI_WRITE_TIMEOUT 10000
@@ -155,7 +155,6 @@ int main(void)
   TERMOUT("Motion Detection Instructions :\r\n");
   TERMOUT("1- The LSM6DSL accelerometer will detect significant motion\r\n");
   TERMOUT("2- Motion events will be sent to the TCP server\r\n");
-  TERMOUT("3- Regular accelerometer data is also transmitted\r\n\n");
 
   /* Initialize accelerometer */
   if(BSP_ACCELERO_Init() == ACCELERO_OK)
@@ -248,28 +247,45 @@ int main(void)
     if(Socket != -1)
     {
       /* Check if motion was detected */
-      if(motion_detected)
-      {
-        motion_detected = 0;
-        motion_count++;
-        last_motion_time = HAL_GetTick();
+//      if(motion_detected)
+//      {
+//        motion_detected = 0;
+//        motion_count++;
+//        last_motion_time = HAL_GetTick();
+//
+//        /* Send motion detection event */
+//        snprintf((char*)TxData, sizeof(TxData),
+//                 "MOTION_DETECTED,Count=%lu,Time=%lu\r\n",
+//                 motion_count, last_motion_time);
+//
+//        TERMOUT(">> Significant Motion Detected! Count: %lu\r\n", motion_count);
+//
+//        ret = WIFI_SendData(Socket, TxData, strlen((char*)TxData), &Datalen, WIFI_WRITE_TIMEOUT);
+//        if (ret != WIFI_STATUS_OK)
+//        {
+//          TERMOUT("> ERROR : Failed to Send Motion Data, connection closed\r\n");
+//          break;
+//        }
+//      }
+      uint8_t func_src_val;
 
-        /* Send motion detection event */
-        snprintf((char*)TxData, sizeof(TxData),
-                 "MOTION_DETECTED,Count=%lu,Time=%lu\r\n",
-                 motion_count, last_motion_time);
+	  func_src_val = SENSOR_IO_Read(LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW, 0x53);
 
-        TERMOUT(">> Significant Motion Detected! Count: %lu\r\n", motion_count);
+	  if (func_src_val & 0x40)
+	  {
+		  motion_count++;
+		  last_motion_time = HAL_GetTick();
 
-        ret = WIFI_SendData(Socket, TxData, strlen((char*)TxData), &Datalen, WIFI_WRITE_TIMEOUT);
-        if (ret != WIFI_STATUS_OK)
-        {
-          TERMOUT("> ERROR : Failed to Send Motion Data, connection closed\r\n");
-          break;
-        }
-      }
+		  TERMOUT(">> Detected event in FUNC_SRC1! (Value: 0x%02X) <<\r\n", func_src_val);
 
-      HAL_Delay(100);
+
+		  snprintf((char*)TxData, sizeof(TxData),
+				   "SIGNIFICANT_MOTION_DETECTED,Count=%lu,Time=%lu\r\n",
+				   (unsigned long)motion_count, (unsigned long)last_motion_time);
+
+		  WIFI_SendData(Socket, TxData, strlen((char*)TxData), &Datalen, WIFI_WRITE_TIMEOUT);
+	  }
+
     }
   }
 }
